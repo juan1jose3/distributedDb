@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+
+  #MONOLITH (MySQL) 
+  mysql:
+    image: mysql:8.0
+    container_name: f1_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: f1db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql   
+      -  ./databaseScript.sql:/docker-entrypoint-initdb.d/databaseScript.sql
+      - ./data:/var/lib/mysql-files/data
+    networks:
+      - f1_network
+
+  # MONGODB CONTAINERS 
+  mongo_races:
+    image: mongo:7.0
+    container_name: f1_races_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_races_data:/data/db
+    networks:
+      - f1_network
+
+  mongo_drivers:
+    image: mongo:7.0
+    container_name: f1_drivers_db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_drivers_data:/data/db
+    networks:
+      - f1_network
+
+  mongo_constructors:
+    image: mongo:7.0
+    container_name: f1_constructors_db
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo_constructors_data:/data/db
+    networks:
+      - f1_network
+
+  mongo_results:
+    image: mongo:7.0
+    container_name: f1_results_db
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo_results_data:/data/db
+    networks:
+      - f1_network
+
+  # FLASK CONTAINER
+  flask_app:
+    build: .
+    container_name: f1_flask
+    command: flask --app src/app run --host=0.0.0.0
+    environment:
+      - MONGO_RACES_URI=mongodb://mongo_races:27017/races_db
+      - MONGO_DRIVERS_URI=mongodb://mongo_drivers:27017/drivers_db
+      - MONGO_CONSTRUCTORS_URI=mongodb://mongo_constructors:27017/constructors_db
+      - MONGO_RESULTS_URI=mongodb://mongo_results:27017/results_db
+      - MYSQL_URI=mysql+mysqlconnector://root:root@mysql/f1db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+      - mongo_races
+      - mongo_drivers
+      - mongo_constructors
+      - mongo_results
+    networks:
+      - f1_network
+
+volumes:
+  mysql_data: 
+  mongo_races_data:
+  mongo_drivers_data:
+  mongo_constructors_data:
+  mongo_results_data:
+
+networks:
+  f1_network:
+    driver: bridge

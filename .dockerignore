@@ -1,0 +1,10 @@
+# .dockerignore
+data/
+diagrams/
+docker-compose.yml
+*.png
+*.csv
+README.md
+__pycache__/
+*.pyc
+.env

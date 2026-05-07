@@ -1,0 +1,5 @@
+flask
+pymongo
+pymysql
+sqlalchemy
+mysql-connector-python
