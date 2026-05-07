@@ -11,6 +11,10 @@ def create_app():
     from .drivers.driver_standing_service import driverStandingMysql
     from .drivers.driver_mongo_standings import driverStandingsMongo
 
+    from .constructors.constructor_services import constructorsMysql
+    from .constructors.constructor_mongo_services import constructorsMongo
+    from .constructors.standings_service import constructorStandingMysql
+
     app.register_blueprint(selectOne)
     app.register_blueprint(racesMongo)
 
@@ -19,4 +23,12 @@ def create_app():
     app.register_blueprint(driverStandingMysql)
     app.register_blueprint(driverStandingsMongo)
 
+
+    app.register_blueprint(constructorsMysql)
+    app.register_blueprint(constructorsMongo)
+    app.register_blueprint(constructorStandingMysql)
+    
+
     return app
+
+
