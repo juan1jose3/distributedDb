@@ -63,13 +63,15 @@ services:
   flask_app:
     build: .
     container_name: f1_flask
-    command: flask --app src/app run --host=0.0.0.0
+    command: flask --app src/app run --host=0.0.0.0 --debug
     environment:
       - MONGO_RACES_URI=mongodb://mongo_races:27017/races_db
       - MONGO_DRIVERS_URI=mongodb://mongo_drivers:27017/drivers_db
       - MONGO_CONSTRUCTORS_URI=mongodb://mongo_constructors:27017/constructors_db
       - MONGO_RESULTS_URI=mongodb://mongo_results:27017/results_db
       - MYSQL_URI=mysql+mysqlconnector://root:root@mysql/f1db
+    volumes:
+      - ./src:/app/src 
     ports:
       - "5000:5000"
     depends_on:
