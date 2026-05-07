@@ -20,6 +20,10 @@ def create_app():
 
     from .results.results_service import resultsMysql
     from .results.results_mongo_service import resultsMongo
+    from .results.qualifying_service import qualifyingMysql
+    from .results.qualifying_mongo_service import qualifyingMongo
+    from .results.lap_times_service import lapTimesMysql
+    from .results.lap_times_mongo_service import lapTimesMongo
 
     app.register_blueprint(selectOne)
     app.register_blueprint(racesMongo)
@@ -39,6 +43,10 @@ def create_app():
 
     app.register_blueprint(resultsMysql)
     app.register_blueprint(resultsMongo)
+    app.register_blueprint(qualifyingMysql)
+    app.register_blueprint(qualifyingMongo)
+    app.register_blueprint(lapTimesMysql)
+    app.register_blueprint(lapTimesMongo)
     
 
     return app
