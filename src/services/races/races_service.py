@@ -147,7 +147,6 @@ def migrate_races():
         db = get_connection()
         cursor = db.cursor(dictionary=True)
         
-        # Get races with circuit data joined
         cursor.execute("""
             SELECT r.id, r.year, r.round, r.name,
             r.date, r.race_time, TRIM(r.url) as url,
@@ -160,7 +159,7 @@ def migrate_races():
         cursor.close()
         db.close()
 
-        # Transform and embed circuit
+      
         for race in races:
             race["date"] = str(race["date"])
             race["race_time"] = str(race["race_time"])
@@ -169,9 +168,9 @@ def migrate_races():
                 "name": race.pop("circuitName"),
                 "location": race.pop("location"),
                 "country": race.pop("country"),
-                "lat": float(race.pop("lat")),      # ← convert Decimal to float
-                "lng": float(race.pop("lng")),      # ← convert Decimal to float
-                "alt": float(race.pop("alt")) if race.get("alt") else None,  # ← nullable
+                "lat": float(race.pop("lat")),      
+                "lng": float(race.pop("lng")),      
+                "alt": float(race.pop("alt")) if race.get("alt") else None,
                 "url": race.pop("circuitUrl")
             }
 
