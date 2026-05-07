@@ -14,6 +14,12 @@ def create_app():
     from .constructors.constructor_services import constructorsMysql
     from .constructors.constructor_mongo_services import constructorsMongo
     from .constructors.standings_service import constructorStandingMysql
+    from .constructors.standings_mongo_service import constructorStandingsMongo
+    from .constructors.constructor_result_service import constructorResultMysql
+    from .constructors.constructor_result_mongo_service import constructorResultsMongo
+
+    from .results.results_service import resultsMysql
+    from .results.results_mongo_service import resultsMongo
 
     app.register_blueprint(selectOne)
     app.register_blueprint(racesMongo)
@@ -27,6 +33,12 @@ def create_app():
     app.register_blueprint(constructorsMysql)
     app.register_blueprint(constructorsMongo)
     app.register_blueprint(constructorStandingMysql)
+    app.register_blueprint(constructorStandingsMongo)
+    app.register_blueprint(constructorResultMysql)
+    app.register_blueprint(constructorResultsMongo)
+
+    app.register_blueprint(resultsMysql)
+    app.register_blueprint(resultsMongo)
     
 
     return app

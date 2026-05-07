@@ -85,3 +85,52 @@ def delete_standing(id):
         return jsonify({"message": "Standing deleted"})
     except Exception as e:
         return jsonify({"error": str(e)})
+
+
+# MIGRATE constructorStandings to MongoDB
+@constructorStandingMysql.route("/migrate/constructorStandings", methods=["POST"])
+def migrate_constructor_standings():
+    try:
+        db = get_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT cs.id, cs.points, cs.positionConstructor, cs.wins,
+            r.id as race_id, r.year, r.round, r.name as race_name,
+            r.date as race_date,
+            c.id as constructor_id, c.constructorName, c.constructorRef,
+            c.constructorNationality, TRIM(c.constructorUrl) as constructorUrl
+            FROM constructorStanding cs
+            JOIN race r ON cs.race_id = r.id
+            JOIN constructor c ON cs.constructor_id = c.id
+        """)
+        standings = cursor.fetchall()
+        cursor.close()
+        db.close()
+
+        for standing in standings:
+            standing["points"] = float(standing["points"])
+            standing["race"] = {
+                "id": standing.pop("race_id"),
+                "year": standing.pop("year"),
+                "round": standing.pop("round"),
+                "name": standing.pop("race_name"),
+                "date": str(standing.pop("race_date"))
+            }
+            standing["constructor"] = {
+                "id": standing.pop("constructor_id"),
+                "name": standing.pop("constructorName"),
+                "ref": standing.pop("constructorRef"),
+                "nationality": standing.pop("constructorNationality"),
+                "url": standing.pop("constructorUrl")
+            }
+
+        mongo_constructors["constructorStandings"].delete_many({})
+        result = mongo_constructors["constructorStandings"].insert_many(standings)
+
+        return jsonify({
+            "message": "Migration successful",
+            "inserted": len(result.inserted_ids)
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
