@@ -1,0 +1,201 @@
+Voy a revisar todo el repositorio para darte un análisis archivo por archivo: primero levantaré un inventario completo y luego leeré el contenido relevante (código, configuración y datos) para resumir función, calidad y riesgos de cada uno.
+
+Ran terminal command:  set -e
+cd /workspaces/distributedDb
+rg --files
+
+Leer [](file:///memories/)
+
+Encontré un problema de acceso a rutas con las herramientas (no pudieron abrir distributedDb ni `/memories/` directamente), así que voy a ubicar primero el directorio activo real del contenedor y desde ahí haré el análisis completo.
+
+Ran terminal command:  pwd && ls -la && ls -la /
+
+Leer [](file:///)
+
+Leer [](file:///workspaces)
+
+Ya ubiqué el repositorio en distributedDb; ahora voy a leer los archivos con las herramientas del editor para entregarte un análisis completo por cada archivo.
+
+Se buscaron archivos que coinciden con `distributedDb`, 42 coincidencias
+
+Primero voy a extraer los archivos raíz de configuración/documentación para entender arquitectura, despliegue y dependencias antes de bajar al código de servicios.
+
+Leer [](file:///workspaces/distributedDb/README.md)
+
+Leer [](file:///workspaces/distributedDb/Dockerfile)
+
+Leer [](file:///workspaces/distributedDb/databaseScript.sql#1-1), líneas 1 a 400
+
+Leer [](file:///workspaces/distributedDb/requirements.txt)
+
+Leer [](file:///workspaces/distributedDb/.dockerignore)
+
+Leer [](file:///workspaces/distributedDb/.gitignore)
+
+Leer [](file:///workspaces/distributedDb/docker-compose.yml)
+
+Ya tengo claro el núcleo de infraestructura: proyecto Flask con MySQL monolítico + 4 nodos Mongo por dominio, y un script SQL grande que crea esquema y hace carga masiva desde CSV. Siguiente paso: leer todo el código en src y completar el tramo final del SQL y los archivos de datos para darte el análisis archivo por archivo.
+
+Leer [](file:///workspaces/distributedDb/databaseScript.sql#401-401), líneas 401 a 436
+
+Leer [](file:///workspaces/distributedDb/src/services/__init__.py)
+
+Leer [](file:///workspaces/distributedDb/src/connection.py)
+
+Leer [](file:///workspaces/distributedDb/src/app.py)
+
+Ahora voy a revisar los servicios por dominio (races, drivers y constructors) para evaluar endpoints, consultas y consistencia entre MySQL y Mongo.
+
+Leer [](file:///workspaces/distributedDb/src/services/races/races_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/races/races_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/drivers/drivers_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/drivers/driver_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/drivers/driver_standing_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/drivers/driver_mongo_standings.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/constructor_services.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/constructor_mongo_services.py)
+
+Ya revisé por completo `races`, `drivers` y parte de `constructors`; veo un patrón consistente de CRUD MySQL, endpoints espejo en Mongo y rutas de migración. Ahora termino los servicios faltantes (`constructor standings/results` y todo `results`) y luego cierro con notebook/datos/diagrama.
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/constructor_result_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/constructor_result_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/results_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/results_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/standings_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/constructors/standings_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/qualifying_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/qualifying_mongo_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/lap_times_service.py)
+
+Leer [](file:///workspaces/distributedDb/src/services/results/lap_times_mongo_service.py)
+
+Termino el barrido con los datasets, notebook y diagrama para cubrir literalmente todos los archivos del repositorio con una lectura técnica completa.
+
+Leer [](file:///workspaces/distributedDb/data/circuits.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/constructorResults.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/constructors.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/constructorStandings.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/drivers.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/pitStops.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/races.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/status.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/qualifying.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/driverStandings.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/results.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/lapTimes.csv#1-1), líneas 1 a 4
+
+Leer [](file:///workspaces/distributedDb/data/qualifying.csv#1-1), líneas 1 a 20
+
+Detecté que qualifying.csv se está leyendo como binario en esta herramienta, así que voy a inspeccionarlo por método alterno junto al notebook y el diagrama para cerrar el análisis sin huecos.
+
+Se ha buscado la expresión regular `qualifyId|raceId|driverId|constructorId` (`**/data/qualifying.csv`), sin resultados
+
+Recuperando resumen del cuaderno de notas.
+
+Imagen visualizada [](file:///workspaces/distributedDb/diagrams/schema_f1.png)
+
+Leer [](file:///workspaces/distributedDb/notebooks/myNoteBook.ipynb)
+
+Leer [](file:///workspaces/distributedDb/data/qualifying.csv#2-2), líneas 2 a 2
+
+Ya terminé la lectura de todos los archivos del repo (código, configuración, SQL, datos, notebook y diagrama) y ahora te entrego un informe completo archivo por archivo con hallazgos claros y mejoras recomendadas.**Resumen General**
+Proyecto orientado a una arquitectura híbrida: MySQL como fuente relacional principal y 4 bases Mongo por dominio para consultas desnormalizadas y distribución lógica. Está bien encaminado para una demo académica de “distributed DB”, pero hay puntos de calidad importantes: validación de datos, manejo de errores, seguridad de credenciales y algunas inconsistencias de migración.
+
+**Análisis Archivo Por Archivo**
+
+- README.md: Prácticamente vacío (solo título). Falta documentación de arranque, endpoints, orden de migración, y troubleshooting.
+- requirements.txt: Dependencias mínimas correctas para Flask/MySQL/Mongo. Sin versiones fijadas, lo que puede romper reproducibilidad.
+- docker-compose.yml: Orquestación clara con MySQL + 4 Mongo + Flask. Correcto para entorno local, pero expone puertos sensibles y credenciales simples.
+- Dockerfile: Construcción simple y funcional. Falta optimización de capas y ejecución con usuario no root.
+- .dockerignore: Bien para reducir contexto; excluye datos pesados y docs.
+- .gitignore: Muy corto; solo ignora __pycache__. Falta ignorar .env, notebooks checkpoints, artefactos temporales, etc.
+- databaseScript.sql: Script robusto de creación de esquema + carga masiva CSV. Muy buen punto de partida; hay riesgo de desalineación de columnas en algunos CSV (ver abajo).
+
+- app.py: Entrada mínima correcta; delega en factory pattern.
+- connection.py: Conexión MySQL funcional, pero credenciales hardcoded y sin manejo de variables de entorno.
+
+- __init__.py: Factory Flask bien estructurada registrando blueprints por dominio. Escalable, aunque importaciones muy manuales.
+
+- races_service.py: CRUD MySQL + migración a Mongo bien planteados.
+- races_mongo_service.py: Lecturas Mongo y conteo correctos.
+
+- drivers_service.py: CRUD y migración consistentes.
+- driver_mongo_service.py: Consultas Mongo limpias.
+- driver_standing_service.py: CRUD + migración correcta, convierte Decimal a float.
+- driver_mongo_standings.py: Endpoints de lectura y count correctos.
+
+- constructor_services.py: CRUD y migración correctos.
+- constructor_mongo_services.py: Lecturas Mongo correctas.
+- standings_service.py: Buen enriquecimiento en migración (race + constructor embebidos).
+- standings_mongo_service.py: Consultas Mongo correctas.
+- constructor_result_service.py: Buen patrón de migración enriquecida.
+- constructor_result_mongo_service.py: Correcto para lectura y conteo.
+
+- results_service.py: CRUD completo y migración relacional->documental muy bien estructurada.
+- results_mongo_service.py: Endpoints de lectura/count correctos.
+- qualifying_service.py: CRUD + migración consistente.
+- qualifying_mongo_service.py: Lecturas Mongo correctas.
+- lap_times_service.py: CRUD + migración correcta.
+- lap_times_mongo_service.py: Correcto para lectura y count.
+
+- circuits.csv: Datos de circuitos con cabecera compatible con carga SQL.
+- constructorResults.csv: Incluye columna status que el script SQL no carga; posible pérdida de información.
+- constructors.csv: Cabecera con coma final sobrante; puede ser inocuo por IGNORE 1 ROWS, pero es inconsistencia.
+- constructorStandings.csv: Tiene columna positionText no presente en tabla destino; revisar mapping en LOAD DATA.
+- drivers.csv: Fechas en formato dd/mm/yyyy; el SQL lo contempla con transformación.
+- driverStandings.csv: Compatible con estructura esperada.
+- lapTimes.csv: Compatible con carga a lapTimes.
+- pitStops.csv: Compatible con carga SQL.
+- qualifying.csv: El editor lo detecta como binario/parcial en esta sesión; no pude inspeccionar su texto completo, pero el script SQL sí referencia su estructura estándar.
+- races.csv: Formato correcto y coherente con tabla race.
+- results.csv: Esquema amplio, alineado con tabla results.
+- status.csv: Catálogo simple correcto.
+
+- myNoteBook.ipynb: Notebook útil para crear colecciones y disparar migraciones vía curl; sirve como guía operativa/manual.
+- schema_f1.png: Diagrama E-R claro y consistente con la mayor parte del SQL.
+
+**Hallazgos Técnicos Importantes**
+1. Bug potencial en normalización de fecha/hora de carrera: en races_service.py, la función clean_time espera lista, pero en GET por id se le pasa un dict.
+2. Seguridad débil por secretos hardcoded: connection.py y docker-compose.yml.
+3. Falta validación de payloads en casi todos los POST/PUT (si faltan campos, puede lanzar excepciones sin mensajes controlados).
+4. Manejo de errores genérico (except Exception) en casi todo el backend; faltan códigos HTTP más precisos.
+5. Cobertura funcional incompleta respecto al modelo: se carga pitStops en SQL y se crea colección en notebook, pero no hay servicios REST dedicados para pitStops en src.
+6. Falta estandarización de documentación y pruebas automáticas.
+
+**Evaluación Rápida**
+- Arquitectura: 8/10
+- Organización de código: 8/10
+- Calidad de API (validación/errores): 5/10
+- Seguridad de configuración: 4/10
+- Documentación: 2/10
+
+Si quieres, en el siguiente paso te puedo entregar:
+1. Un plan priorizado de refactor en 1 semana (quick wins + mejoras estructurales).
+2. Un parche directo corrigiendo los bugs críticos y añadiendo validaciones base.
+3. Un README completo con instrucciones exactas para levantar, migrar y probar todo el sistema.
